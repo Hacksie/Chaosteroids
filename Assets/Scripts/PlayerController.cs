@@ -14,6 +14,8 @@ namespace HackedDesign
 
         [Header("Referenced GameObjects")]
         [SerializeField] private Transform firePosition = null;
+        [SerializeField] private AudioSource fireSFX = null;
+        [SerializeField] private AudioSource explodeSFX = null;
 
         private new Rigidbody2D rigidbody;
         private Vector2 moveVector;
@@ -40,6 +42,10 @@ namespace HackedDesign
                 fireTimer = Time.time;
                 var bullet = GameManager.Instance.Pool.InstantiateBullet();
                 bullet.Fire(firePosition.position, transform.up);
+                if(fireSFX)
+                {
+                    fireSFX.Play();
+                }
             }
         }
 
@@ -89,6 +95,10 @@ namespace HackedDesign
 
         public void Explode()
         {
+            if(explodeSFX)
+            {
+                explodeSFX.Play();
+            }
             GameManager.Instance.GameOver();
         }
     }

@@ -86,6 +86,7 @@ namespace HackedDesign
 
         public void Start()
         {
+            Time.timeScale = 0;
             Player.gameObject.SetActive(false);
             Player.Reset();
             Pool.Reset();

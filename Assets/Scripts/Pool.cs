@@ -39,6 +39,7 @@ namespace HackedDesign
         {
             asteroids.Select(e => { e.Value.ForEach(a => a.gameObject.SetActive(false)); return true; }).ToList();
             bullets.ForEach(b => b.gameObject.SetActive(false));
+            ResetAlien();
         }
 
         private Asteroid InstantiateAsteroid(AsteroidSize size)
@@ -98,6 +99,11 @@ namespace HackedDesign
             }
 
             return bullet;
+        }
+
+        public void ResetAlien()
+        {
+            alien.gameObject.SetActive(false);
         }
 
         public void LaunchAlien(Vector3 position)

@@ -1,4 +1,5 @@
 
+using UnityEngine;
 
 namespace HackedDesign
 {
@@ -14,9 +15,11 @@ namespace HackedDesign
 
         public void Begin()
         {
+            SaveHighScore();
+
             this.gameoverPresenter.Show();
             this.gameoverPresenter.Repaint();
-            
+
         }
 
         public void End()
@@ -25,19 +28,29 @@ namespace HackedDesign
             GameManager.Instance.Reset();
         }
 
+        private void SaveHighScore()
+        {
+            var highscore = PlayerPrefs.GetInt("Score" + GameManager.Instance.GameType.ToString(), 0);
+
+            if (GameManager.Instance.Score > highscore)
+            {
+                PlayerPrefs.SetInt("Score" + GameManager.Instance.GameType.ToString(), GameManager.Instance.Score);
+            }
+        }
+
         public void FixedUpdate()
         {
-            
+
         }
 
         public void Start()
         {
-            
+
         }
 
         public void Update()
         {
-            
+
         }
     }
 

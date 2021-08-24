@@ -10,6 +10,8 @@ namespace HackedDesign
         [SerializeField] private int numberOfSpawns = 2;
         [SerializeField] private float radius = 1;
         [SerializeField] private float autoPopTime = 30;
+        [Header("Referenced GameObjects")]
+        [SerializeField] private AudioSource explodeSFX = null;
 
         private new Rigidbody2D rigidbody = null;
 
@@ -36,13 +38,18 @@ namespace HackedDesign
 
         public void Explode()
         {
-            GameManager.Instance.IncreaseScore((int)size);
+            GameManager.Instance.IncreaseScore((int)size + 1);
 
             Pop();
         }
 
         public void Pop()
         {
+            if(explodeSFX)
+            {
+                explodeSFX.Play();
+            }
+
             if (GameManager.Instance.GameType == GameManager.GameplayType.Chaos)
             {
                 gameObject.SetActive(false);

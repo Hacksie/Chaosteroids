@@ -55,7 +55,7 @@ namespace HackedDesign
             {
                 var circle = (Random.insideUnitCircle.normalized * 3.0f);
                 var position = GameManager.Instance.Player.transform.position + new Vector3(circle.x, circle.y);
-                nextAlienSpawn = Time.time + Random.Range(10, 60);
+                nextAlienSpawn = Time.time + Random.Range(30, 90);
                 GameManager.Instance.Pool.LaunchAlien(position);
             }
 

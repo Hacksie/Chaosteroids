@@ -13,7 +13,10 @@ namespace HackedDesign.UI
         public override void Repaint()
         {
             score.text = GameManager.Instance.Score.ToString("N0");
-            highscore.text = GameManager.Instance.Score.ToString("N0");
+
+            var currentHighscore = PlayerPrefs.GetInt("Score" + GameManager.Instance.GameType.ToString(), 0);
+
+            highscore.text = currentHighscore.ToString("N0");
 
         }
 

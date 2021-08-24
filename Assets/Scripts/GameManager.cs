@@ -10,6 +10,7 @@ namespace HackedDesign
         [SerializeField] private Pool pool = null;
         [SerializeField] private PlayerController player = null;
         [SerializeField] private GameObject fakePlayer = null;
+        [SerializeField] private AudioSource music = null;
 
         [Header("UI")]
         [SerializeField] private UI.AbstractPresenter menuPanel = null;
@@ -21,6 +22,8 @@ namespace HackedDesign
         [SerializeField] private int score;
         [SerializeField] private int gametime = 0;
         [SerializeField] private float gameStart = 0;
+        [SerializeField] private int level = 0;
+        [SerializeField] private int spawnTimer = 0;
         [SerializeField] private GameplayType gameType = GameplayType.Chaos;
         [SerializeField] private bool sound = false;
 
@@ -42,29 +45,32 @@ namespace HackedDesign
 
         public Pool Pool { get { return pool; } private set { pool = value; } }
         public PlayerController Player { get { return player; } private set { player = value; } }
-        public int Score { get { return score; } private set { score = value; }}
-        public int GameTime { get { return gametime; } set { gametime = value; }}
-        public float GameStart { get { return gameStart;} private set { gameStart = value; }}
-        public GameplayType GameType { get { return gameType; } set { gameType = value; }}
-        public bool Sound { get { return sound; } set { sound = value; }}
+        public int Score { get { return score; } private set { score = value; } }
+        public int GameTime { get { return gametime; } set { gametime = value; } }
+        public float GameStart { get { return gameStart; } private set { gameStart = value; } }
+        public GameplayType GameType { get { return gameType; } set { gameType = value; } }
+        public bool Sound { get { return sound; } set { sound = value; } }
+        public int Level { get { return level; } set { level = value; } }
+        public int SpawnCountdown { get { return spawnTimer; } set { spawnTimer = value; }}
+        public AudioSource Music { get { return music; }}
 
         public static GameManager Instance { get; private set; }
 
-        public void SetPlaying() 
-        { 
-            switch(GameType)
+        public void SetPlaying()
+        {
+            switch (GameType)
             {
                 case GameplayType.Normal:
-                State = new PlayingNormalState(Player, this.hudPanel);
-                break;
+                    State = new PlayingNormalState(Player, this.hudPanel);
+                    break;
                 case GameplayType.Crazy:
-                State = new PlayingCrazyState(Player, this.hudPanel);
-                break;
+                    State = new PlayingCrazyState(Player, this.hudPanel);
+                    break;
                 case GameplayType.Chaos:
-                State = new PlayingChaosState(Player, this.hudPanel);
-                break;
+                    State = new PlayingChaosState(Player, this.hudPanel);
+                    break;
             }
-            
+
         }
         public void SetGameOver() => State = new GameOverState(this.gameoverPanel);
         public void SetAbout() => State = new AboutState(this.aboutPanel);
@@ -86,6 +92,15 @@ namespace HackedDesign
             GameStart = Time.time;
             HideAllUI();
             SetMenu();
+        }
+
+        public void Reset()
+        {
+            Level = 0;
+            SpawnCountdown = 0;
+            Score = 0;
+            Pool.Reset();
+            Player.Reset();
         }
 
 
@@ -113,7 +128,7 @@ namespace HackedDesign
             this.hudPanel.Hide();
         }
 
-        public enum GameplayType 
+        public enum GameplayType
         {
             Normal,
             Crazy,

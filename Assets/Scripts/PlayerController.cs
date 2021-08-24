@@ -60,6 +60,7 @@ namespace HackedDesign
         {
             transform.position = Vector3.zero;
             transform.rotation = Quaternion.identity;
+            fireTimer = 0;
             Stop();
         }
 

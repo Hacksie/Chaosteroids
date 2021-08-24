@@ -22,7 +22,7 @@ namespace HackedDesign
         public void End()
         {
             this.gameoverPresenter.Hide();
-            GameManager.Instance.Pool.Reset();            
+            GameManager.Instance.Reset();
         }
 
         public void FixedUpdate()

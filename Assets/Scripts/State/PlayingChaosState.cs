@@ -8,8 +8,10 @@ namespace HackedDesign
         private PlayerController player;
         private UI.AbstractPresenter hudPresenter;
 
-        private int spawnTimer = 0;
-        private int spawnCount = 0;
+        public const int Countdown = 10;
+        public bool first = true;
+        
+        
 
         public PlayingChaosState(PlayerController player, UI.AbstractPresenter hudPresenter)
         {
@@ -36,6 +38,7 @@ namespace HackedDesign
             Time.timeScale = 0;
             Cursor.visible = true;
             this.hudPresenter.Hide();
+            GameManager.Instance.Music.pitch = 1.0f;
         }
 
         public void FixedUpdate()
@@ -52,20 +55,26 @@ namespace HackedDesign
         {
             if (Mathf.FloorToInt(Time.time - GameManager.Instance.GameStart) > GameManager.Instance.GameTime)
             {
-                spawnTimer--;
+                GameManager.Instance.SpawnCountdown--;
                 GameManager.Instance.GameTime = Mathf.FloorToInt(Time.time);
                 GameManager.Instance.IncreaseScore(GameManager.Instance.CalcFrameScore());
             }
 
-            if (spawnTimer <= 0)
+            if (GameManager.Instance.SpawnCountdown <= 0)
             {
-                for (int i = 0; i < spawnCount; i++)
+                for (int i = 0; i < GameManager.Instance.Level; i++)
                 {
                     var circle = (Random.insideUnitCircle.normalized * 3.0f);
                     var position = GameManager.Instance.Player.transform.position + new Vector3(circle.x, circle.y);
                     GameManager.Instance.Pool.SpawnAsteroid(AsteroidSize.Large, position);
                 }
-                spawnTimer = 10;
+                GameManager.Instance.SpawnCountdown = Countdown;
+                // Hack to stop the pitch increases immediately
+                if (!first)
+                {
+                    GameManager.Instance.Music.pitch += 0.05f;
+                }
+                first = false;
             }
 
             // If we ever run out, spawn some more in
@@ -74,8 +83,8 @@ namespace HackedDesign
             + GameManager.Instance.Pool.GetAsteroidCount(AsteroidSize.Small)
             + GameManager.Instance.Pool.GetAsteroidCount(AsteroidSize.Tiny) <= 0)
             {
-                spawnCount++;
-                for (int i = 0; i < spawnCount; i++)
+                GameManager.Instance.Level++;
+                for (int i = 0; i < GameManager.Instance.Level; i++)
                 {
                     var circle = (Random.insideUnitCircle.normalized * 3.0f);
                     var position = GameManager.Instance.Player.transform.position + new Vector3(circle.x, circle.y);

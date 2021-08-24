@@ -13,6 +13,7 @@ namespace HackedDesign.UI
         [SerializeField] private UnityEngine.UI.Image musicIcon;
         [SerializeField] private Sprite musicOn;
         [SerializeField] private Sprite musicOff;
+        [SerializeField] private UnityEngine.Audio.AudioMixer audioMixer;
 
         void Update() => Repaint();
 
@@ -60,7 +61,12 @@ namespace HackedDesign.UI
         }
 
         public void AboutClickEvent() => GameManager.Instance.SetAbout();
-        public void SoundClickEvent() => GameManager.Instance.Sound = !GameManager.Instance.Sound;
+
+        public void SoundClickEvent()
+        {
+            GameManager.Instance.Sound = !GameManager.Instance.Sound;
+            audioMixer.SetFloat("Master", GameManager.Instance.Sound ? 0 : -80);
+        }
         public void QuitClickEvent() => Application.Quit();
 
     }

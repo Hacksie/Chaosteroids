@@ -7,8 +7,7 @@ namespace HackedDesign
     {
         private PlayerController player;
         private UI.AbstractPresenter hudPresenter;
-
-        private int spawnCount = 0;
+        public bool first = true;
 
         public PlayingNormalState(PlayerController player, UI.AbstractPresenter hudPresenter)
         {
@@ -54,13 +53,20 @@ namespace HackedDesign
             + GameManager.Instance.Pool.GetAsteroidCount(AsteroidSize.Small)
             + GameManager.Instance.Pool.GetAsteroidCount(AsteroidSize.Tiny) <= 0)
             {
-                spawnCount++;
-                for (int i = 0; i < spawnCount; i++)
+                GameManager.Instance.Level++;
+                for (int i = 0; i < GameManager.Instance.Level; i++)
                 {
                     var circle = (Random.insideUnitCircle.normalized * 3.0f);
                     var position = GameManager.Instance.Player.transform.position + new Vector3(circle.x, circle.y);
                     GameManager.Instance.Pool.SpawnAsteroid(AsteroidSize.Large, position);
                 }
+
+                // Hack to stop the pitch increases immediately
+                if (!first)
+                {
+                    GameManager.Instance.Music.pitch += 0.05f;
+                }
+                first = false;                
             }
 
             this.player.UpdateBehaviour();

@@ -6,16 +6,16 @@ namespace HackedDesign.UI
 {
     public class MenuPresenter : AbstractPresenter
     {
-        [SerializeField] UnityEngine.UI.Button normalButton;
-        [SerializeField] UnityEngine.UI.Button eliminationButton;
-        [SerializeField] UnityEngine.UI.Button chaosButton;
-        [SerializeField] UnityEngine.UI.Button quitButton;
+        [SerializeField] private UnityEngine.UI.Button normalButton;
+        [SerializeField] private UnityEngine.UI.Button crazyButton;
+        [SerializeField] private UnityEngine.UI.Button chaosButton;
+        [SerializeField] private UnityEngine.UI.Button quitButton;
+        [SerializeField] private UnityEngine.UI.Image musicIcon;
+        [SerializeField] private Sprite musicOn;
+        [SerializeField] private Sprite musicOff;
 
+        void Update() => Repaint();
 
-        void Update()
-        {
-            Repaint();
-        }
         public override void Repaint()
         {
             switch (GameManager.Instance.GameType)
@@ -23,24 +23,23 @@ namespace HackedDesign.UI
                 case GameManager.GameplayType.Chaos:
                     chaosButton.Select();
                     break;
-                case GameManager.GameplayType.Elimination:
-                    eliminationButton.Select();
+                case GameManager.GameplayType.Crazy:
+                    crazyButton.Select();
                     break;
                 case GameManager.GameplayType.Normal:
                     normalButton.Select();
                     break;
             }
 
-            if(Application.platform == RuntimePlatform.WebGLPlayer)
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
                 quitButton.interactable = false;
             }
+
+            musicIcon.sprite = GameManager.Instance.Sound ? musicOn : musicOff;
         }
 
-        public void PlayClickEvent()
-        {
-            GameManager.Instance.SetPlaying();
-        }
+        public void PlayClickEvent() => GameManager.Instance.SetPlaying();
 
         public void NormalClickEvent()
         {
@@ -48,9 +47,9 @@ namespace HackedDesign.UI
             Repaint();
         }
 
-        public void EliminationClickEvent()
+        public void CrazyClickEvent()
         {
-            GameManager.Instance.GameType = GameManager.GameplayType.Elimination;
+            GameManager.Instance.GameType = GameManager.GameplayType.Crazy;
             Repaint();
         }
 
@@ -60,14 +59,9 @@ namespace HackedDesign.UI
             Repaint();
         }
 
-        public void SoundClickEvent()
-        {
+        public void AboutClickEvent() => GameManager.Instance.SetAbout();
+        public void SoundClickEvent() => GameManager.Instance.Sound = !GameManager.Instance.Sound;
+        public void QuitClickEvent() => Application.Quit();
 
-        }
-
-        public void QuitClickEvent()
-        {
-            Application.Quit();
-        }
     }
 }

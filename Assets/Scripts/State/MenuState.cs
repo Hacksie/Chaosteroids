@@ -1,13 +1,15 @@
-
+using UnityEngine;
 
 namespace HackedDesign
 {
     public class MenuState : IState
     {
         private UI.AbstractPresenter menuPresenter;
+        private GameObject fakePlayer;
 
-        public MenuState(UI.AbstractPresenter menuPresenter)
+        public MenuState(GameObject fakePlayer, UI.AbstractPresenter menuPresenter)
         {
+            this.fakePlayer = fakePlayer;
             this.menuPresenter = menuPresenter;
         }
 
@@ -17,11 +19,13 @@ namespace HackedDesign
         {
             this.menuPresenter.Show();
             this.menuPresenter.Repaint();
+            this.fakePlayer.SetActive(true);
         }
 
         public void End()
         {
             this.menuPresenter.Hide();
+            this.fakePlayer.SetActive(false);
         }
 
         public void FixedUpdate()

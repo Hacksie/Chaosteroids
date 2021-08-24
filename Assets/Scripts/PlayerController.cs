@@ -13,7 +13,6 @@ namespace HackedDesign
         [SerializeField] private float fireRate = 0.5f;
 
         [Header("Referenced GameObjects")]
-        [SerializeField] private Pool pool = null;
         [SerializeField] private Transform firePosition = null;
 
         private new Rigidbody2D rigidbody;
@@ -25,14 +24,6 @@ namespace HackedDesign
         {
             rigidbody = GetComponent<Rigidbody2D>();
         }
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-
 
         public void FireEvent(InputAction.CallbackContext context)
         {
@@ -49,13 +40,20 @@ namespace HackedDesign
                 fireTimer = Time.time;
                 var bullet = GameManager.Instance.Pool.InstantiateBullet();
                 bullet.Fire(firePosition.position, transform.up);
-
             }
         }
 
         public void MoveEvent(InputAction.CallbackContext context)
         {
             moveVector = context.ReadValue<Vector2>();
+        }
+        
+        public void EscapeEvent(InputAction.CallbackContext context)
+        {
+            if(context.performed)
+            {
+                GameManager.Instance.SetGameOver();
+            }
         }
 
         public void Reset()
@@ -69,8 +67,7 @@ namespace HackedDesign
         {
             UpdateThrust();
             UpdateRotation();
-
-        }        
+        }
 
         public void Stop()
         {
@@ -80,11 +77,7 @@ namespace HackedDesign
         public void UpdateThrust()
         {
             rigidbody.AddForce(transform.up * Mathf.Clamp01(moveVector.y));
-
-            if (rigidbody.velocity.sqrMagnitude <= (maxVelocity * maxVelocity))
-            {
-                rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, maxVelocity);
-            }
+            rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, maxVelocity);
         }
 
         public void UpdateRotation()
@@ -93,11 +86,10 @@ namespace HackedDesign
             transform.rotation = Quaternion.AngleAxis(rotationAngle, Vector3.forward);
         }
 
-    public void Explode()
-    {
-        Debug.Log("Player exploded", this);
-        GameManager.Instance.GameOver();
-    }        
+        public void Explode()
+        {
+            GameManager.Instance.GameOver();
+        }
     }
 
 }

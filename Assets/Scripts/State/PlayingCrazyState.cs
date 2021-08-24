@@ -3,18 +3,19 @@ using UnityEngine;
 
 namespace HackedDesign
 {
-    public class PlayingNormalState : IState
+    public class PlayingCrazyState : IState
     {
         private PlayerController player;
         private UI.AbstractPresenter hudPresenter;
 
+        private int spawnTimer = 0;
         private int spawnCount = 0;
 
-        public PlayingNormalState(PlayerController player, UI.AbstractPresenter hudPresenter)
+        public PlayingCrazyState(PlayerController player, UI.AbstractPresenter hudPresenter)
         {
             this.player = player;
             this.hudPresenter = hudPresenter;
-            Debug.Log("New normal state");
+            Debug.Log("New crazy state");
         }
 
         public bool Playing => true;
@@ -49,6 +50,25 @@ namespace HackedDesign
 
         public void Update()
         {
+            if (Mathf.FloorToInt(Time.time - GameManager.Instance.GameStart) > GameManager.Instance.GameTime)
+            {
+                spawnTimer--;
+                GameManager.Instance.GameTime = Mathf.FloorToInt(Time.time);
+                GameManager.Instance.IncreaseScore(GameManager.Instance.CalcFrameScore());
+            }
+
+            if (spawnTimer <= 0)
+            {
+                for (int i = 0; i < spawnCount; i++)
+                {
+                    var circle = (Random.insideUnitCircle.normalized * 3.0f);
+                    var position = GameManager.Instance.Player.transform.position + new Vector3(circle.x, circle.y);
+                    GameManager.Instance.Pool.SpawnAsteroid(AsteroidSize.Large, position);
+                }
+                spawnTimer = 15;
+            }
+
+            // If we ever run out, spawn some more in
             if (GameManager.Instance.Pool.GetAsteroidCount(AsteroidSize.Large)
             + GameManager.Instance.Pool.GetAsteroidCount(AsteroidSize.Medium)
             + GameManager.Instance.Pool.GetAsteroidCount(AsteroidSize.Small)
@@ -62,6 +82,7 @@ namespace HackedDesign
                     GameManager.Instance.Pool.SpawnAsteroid(AsteroidSize.Large, position);
                 }
             }
+
 
             this.player.UpdateBehaviour();
         }

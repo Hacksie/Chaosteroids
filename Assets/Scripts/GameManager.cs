@@ -9,10 +9,12 @@ namespace HackedDesign
         [Header("Referenced Game Objects")]
         [SerializeField] private Pool pool = null;
         [SerializeField] private PlayerController player = null;
+        [SerializeField] private GameObject fakePlayer = null;
 
         [Header("UI")]
         [SerializeField] private UI.AbstractPresenter menuPanel = null;
         [SerializeField] private UI.AbstractPresenter gameoverPanel = null;
+        [SerializeField] private UI.AbstractPresenter aboutPanel = null;
         [SerializeField] private UI.AbstractPresenter hudPanel = null;
 
         [Header("State")]
@@ -20,6 +22,7 @@ namespace HackedDesign
         [SerializeField] private int gametime = 0;
         [SerializeField] private float gameStart = 0;
         [SerializeField] private GameplayType gameType = GameplayType.Chaos;
+        [SerializeField] private bool sound = false;
 
         private IState state = new EmptyState();
 
@@ -43,6 +46,7 @@ namespace HackedDesign
         public int GameTime { get { return gametime; } set { gametime = value; }}
         public float GameStart { get { return gameStart;} private set { gameStart = value; }}
         public GameplayType GameType { get { return gameType; } set { gameType = value; }}
+        public bool Sound { get { return sound; } set { sound = value; }}
 
         public static GameManager Instance { get; private set; }
 
@@ -51,10 +55,10 @@ namespace HackedDesign
             switch(GameType)
             {
                 case GameplayType.Normal:
-                State = new PlayingChaosState(Player, this.hudPanel);
+                State = new PlayingNormalState(Player, this.hudPanel);
                 break;
-                case GameplayType.Elimination:
-                State = new PlayingChaosState(Player, this.hudPanel);
+                case GameplayType.Crazy:
+                State = new PlayingCrazyState(Player, this.hudPanel);
                 break;
                 case GameplayType.Chaos:
                 State = new PlayingChaosState(Player, this.hudPanel);
@@ -63,7 +67,8 @@ namespace HackedDesign
             
         }
         public void SetGameOver() => State = new GameOverState(this.gameoverPanel);
-        public void SetMenu() => State = new MenuState(this.menuPanel);
+        public void SetAbout() => State = new AboutState(this.aboutPanel);
+        public void SetMenu() => State = new MenuState(this.fakePlayer, this.menuPanel);
 
         GameManager()
         {
@@ -104,13 +109,14 @@ namespace HackedDesign
         {
             this.menuPanel.Hide();
             this.gameoverPanel.Hide();
+            this.aboutPanel.Hide();
             this.hudPanel.Hide();
         }
 
         public enum GameplayType 
         {
             Normal,
-            Elimination,
+            Crazy,
             Chaos
         }
     }

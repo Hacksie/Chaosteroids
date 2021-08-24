@@ -29,7 +29,7 @@ namespace HackedDesign
 
         public int GetAsteroidCount(AsteroidSize size)
         {
-            return asteroids[size].Count;
+            return asteroids[size].Where(s => s.gameObject.activeInHierarchy).Count();
         }
 
         public void Reset()

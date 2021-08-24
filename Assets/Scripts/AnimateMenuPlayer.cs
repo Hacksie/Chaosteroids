@@ -12,14 +12,22 @@ namespace HackedDesign
         // Update is called once per frame
         void Update()
         {
-            this.transform.Rotate(new Vector3(0, 0, -rotateSpeed * Time.deltaTime));
-            if (GameManager.Instance.GameType == GameManager.GameplayType.Chaos)
+
+            switch (GameManager.Instance.GameType)
             {
-                ship.transform.Rotate(new Vector3(0, 0, 6 * rotateSpeed * Time.deltaTime));
-            }
-            else
-            {
-                ship.transform.localRotation = Quaternion.Euler(0, 0, -90);
+                case GameManager.GameplayType.Chaos:
+                    this.transform.Rotate(new Vector3(0, 0, 1.5f * -rotateSpeed * Time.deltaTime));
+                    ship.transform.Rotate(new Vector3(0, 0, 6 * rotateSpeed * Time.deltaTime));
+                    break;
+                case GameManager.GameplayType.Crazy:
+                    this.transform.Rotate(new Vector3(0, 0, 1.5f * -rotateSpeed * Time.deltaTime));
+                    ship.transform.localRotation = Quaternion.Euler(0, 0, -90);
+                    break;
+                case GameManager.GameplayType.Normal:
+                default:
+                    this.transform.Rotate(new Vector3(0, 0, -rotateSpeed * Time.deltaTime));
+                    ship.transform.localRotation = Quaternion.Euler(0, 0, -90);
+                    break;
             }
         }
     }

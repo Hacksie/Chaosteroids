@@ -24,7 +24,7 @@ namespace HackedDesign
 
         void Update()
         {
-            if (GameManager.Instance.GameType == GameManager.GameplayType.Chaos && spawnTime <= (Time.time - autoPopTime))
+            if (GameManager.Instance.GameType == GameManager.GameplayType.Chaos && size != AsteroidSize.Tiny && spawnTime <= (Time.time - autoPopTime))
             {
                 Pop();
             }
@@ -52,9 +52,9 @@ namespace HackedDesign
 
             if (GameManager.Instance.GameType == GameManager.GameplayType.Chaos)
             {
-                gameObject.SetActive(false);
                 if (size != AsteroidSize.Tiny)
                 {
+                    gameObject.SetActive(false);
                     SpawnSmallerAsteroids();
                 }
             }

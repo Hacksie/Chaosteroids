@@ -13,7 +13,7 @@ namespace HackedDesign
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (!gameObject.CompareTag("Asteroid") || (gameObject.CompareTag("Asteroid") && !collision.gameObject.CompareTag("Asteroid")))
+            if (!gameObject.CompareTag("Asteroid") || (gameObject.CompareTag("Asteroid") && (!collision.gameObject.CompareTag("Asteroid") && !collision.gameObject.CompareTag("Alien"))))
             {
                 collideEvent.Invoke();
             }

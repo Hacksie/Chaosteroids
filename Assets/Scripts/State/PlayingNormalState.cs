@@ -9,6 +9,8 @@ namespace HackedDesign
         private UI.AbstractPresenter hudPresenter;
         public bool first = true;
 
+        public float nextAlienSpawn = 0;
+
         public PlayingNormalState(PlayerController player, UI.AbstractPresenter hudPresenter)
         {
             this.player = player;
@@ -25,6 +27,7 @@ namespace HackedDesign
             Time.timeScale = 1;
             Cursor.visible = false;
             this.hudPresenter.Show();
+            this.nextAlienSpawn = Time.time + Random.Range(10, 30);
         }
 
         public void End()
@@ -48,6 +51,14 @@ namespace HackedDesign
 
         public void Update()
         {
+            if (nextAlienSpawn < Time.time)
+            {
+                var circle = (Random.insideUnitCircle.normalized * 3.0f);
+                var position = GameManager.Instance.Player.transform.position + new Vector3(circle.x, circle.y);
+                nextAlienSpawn = Time.time + Random.Range(10, 60);
+                GameManager.Instance.Pool.LaunchAlien(position);
+            }
+
             if (GameManager.Instance.Pool.GetAsteroidCount(AsteroidSize.Large)
             + GameManager.Instance.Pool.GetAsteroidCount(AsteroidSize.Medium)
             + GameManager.Instance.Pool.GetAsteroidCount(AsteroidSize.Small)

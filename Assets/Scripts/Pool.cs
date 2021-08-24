@@ -14,6 +14,9 @@ namespace HackedDesign
         [Header("Bullets")]
         [SerializeField] Transform bulletPoolParent = null;
         [SerializeField] Bullet bulletPrefab = null;
+
+        [Header("Alien")]
+        [SerializeField] Alien alien = null;
         // Start is called before the first frame update
 
         private Dictionary<AsteroidSize, List<Asteroid>> asteroids = new Dictionary<AsteroidSize, List<Asteroid>>();
@@ -95,6 +98,11 @@ namespace HackedDesign
             }
 
             return bullet;
+        }
+
+        public void LaunchAlien(Vector3 position)
+        {
+            alien.Launch(position, Random.insideUnitCircle.normalized * 50);
         }
     }
 }

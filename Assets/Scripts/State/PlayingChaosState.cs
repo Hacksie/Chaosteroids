@@ -10,8 +10,10 @@ namespace HackedDesign
 
         public const int Countdown = 10;
         public bool first = true;
-        
-        
+
+        public float nextAlienSpawn = 0;
+
+
 
         public PlayingChaosState(PlayerController player, UI.AbstractPresenter hudPresenter)
         {
@@ -29,6 +31,7 @@ namespace HackedDesign
             Time.timeScale = 1;
             Cursor.visible = false;
             this.hudPresenter.Show();
+            this.nextAlienSpawn = Time.time + Random.Range(10, 30);
         }
 
         public void End()
@@ -53,6 +56,14 @@ namespace HackedDesign
 
         public void Update()
         {
+            if (nextAlienSpawn < Time.time)
+            {
+                var circle = (Random.insideUnitCircle.normalized * 3.0f);
+                var position = GameManager.Instance.Player.transform.position + new Vector3(circle.x, circle.y);
+                nextAlienSpawn = Time.time + Random.Range(30, 90);
+                GameManager.Instance.Pool.LaunchAlien(position);
+            }
+
             if (Mathf.FloorToInt(Time.time - GameManager.Instance.GameStart) > GameManager.Instance.GameTime)
             {
                 GameManager.Instance.SpawnCountdown--;

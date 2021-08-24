@@ -9,6 +9,7 @@ namespace HackedDesign
     public class ClampToViewport : MonoBehaviour
     {
         [SerializeField] private Camera mainCamera;
+        [SerializeField] private bool disableOnExit = false;
 
         private void Awake()
         {
@@ -29,21 +30,27 @@ namespace HackedDesign
             Vector3 viewPosition = mainCamera.WorldToViewportPoint(transform.position);
             var viewPort = mainCamera.rect;
 
+            bool exit = false;
+
             if (viewPosition.x < viewPort.x)
             {
                 viewPosition.x = viewPort.x + viewPort.width;
+                exit = true;
             }
             if (viewPosition.x > (viewPort.x + viewPort.width))
             {
                 viewPosition.x = viewPort.x;
+                exit = true;
             }
             if (viewPosition.y < viewPort.y)
             {
                 viewPosition.y = viewPort.y + viewPort.height;
+                exit = true;
             }
             if (viewPosition.y > (viewPort.y + viewPort.height))
             {
                 viewPosition.y = viewPort.y;
+                exit = true;
             }
 
             var newPosition = mainCamera.ViewportToWorldPoint(viewPosition);
@@ -52,6 +59,11 @@ namespace HackedDesign
             {
                 transform.position = newPosition;
             }
+
+            if(exit && disableOnExit)
+            {
+                gameObject.SetActive(false);
+            }            
         }
     }
 }

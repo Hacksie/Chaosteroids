@@ -10,7 +10,7 @@ namespace HackedDesign
         [Header("Referenced GameObjects")]
         private Camera mainCamera;
         private new Rigidbody2D rigidbody;
-        private TrailRenderer trail;
+        [SerializeField] private TrailRenderer trail;
 
         [Header("Settings")]
         [SerializeField] private float bulletSpeed = 50.0f;
@@ -24,7 +24,6 @@ namespace HackedDesign
             }
 
             rigidbody = GetComponent<Rigidbody2D>();
-            trail = GetComponentInChildren<TrailRenderer>();
         }
 
         // Update is called once per frame
@@ -32,7 +31,6 @@ namespace HackedDesign
         {
             if (CheckOutOfBounds())
             {
-                trail.Clear();
                 gameObject.SetActive(false);
 
             }
@@ -40,15 +38,16 @@ namespace HackedDesign
 
         public void Explode()
         {
+            rigidbody.velocity = Vector3.zero;
             gameObject.SetActive(false);
         }
 
         public void Fire(Vector2 position, Vector3 up)
         {
-            trail.Clear();
             transform.position = position;
             transform.up = up;
             rigidbody.AddForce(up.normalized * bulletSpeed);
+            trail.Clear();
             
         }
 
